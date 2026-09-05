@@ -6,7 +6,7 @@ MeetPoint 是一个 iOS 风格的 Expo / React Native 产品 MVP。发起人填�
 
 ## 在线体验
 
-公开体验地址将在首次 Vercel 部署完成后补充。
+[打开 MeetPoint 在线体验](https://meetpoint-app-mu.vercel.app/)
 
 ## 核心功能
 
