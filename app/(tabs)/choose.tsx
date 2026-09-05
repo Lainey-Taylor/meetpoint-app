@@ -7,7 +7,7 @@ import { CustomDatePicker } from '@/components/CustomDatePicker';
 import { PlaceAutocomplete } from '@/components/PlaceAutocomplete';
 import { Card, Chip, Header, PrimaryButton, Screen, SectionTitle } from '@/components/ui';
 import { colors } from '@/constants/theme';
-import { demoQualified, modeLabels } from '@/data/demo';
+import { modeLabels } from '@/data/demo';
 import { recommendRestaurants } from '@/services/meetpoint-api';
 import { useMeetPoint } from '@/state/MeetPointContext';
 import type { Participant, TravelMode } from '@/types/meetpoint';
@@ -50,10 +50,12 @@ export default function ChooseScreen() {
     try {
       const result = await recommendRestaurants({ city: state.city, date: state.date, arrivalTime: state.arrivalTime, participants: state.participants, budget: budget || undefined, includeCuisines: include, excludeCuisines: exclude });
       state.setRecommendation(result); setNotice('已使用高德实时数据完成验证');
-    } catch {
-      state.setRecommendation(demoQualified); setNotice('本地服务暂不可达，当前展示演示结果');
+      router.push('/results');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : '请求失败';
+      setNotice(`暂时无法生成真实餐厅：${message}`);
     } finally {
-      setLoading(false); router.push('/results');
+      setLoading(false);
     }
   };
 

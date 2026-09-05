@@ -1,6 +1,7 @@
-import { createContext, PropsWithChildren, useContext, useMemo, useState } from 'react';
+import { createContext, PropsWithChildren, useContext, useEffect, useMemo, useState } from 'react';
 
-import { demoQualified, initialParticipants } from '@/data/demo';
+import { initialParticipants } from '@/data/demo';
+import { loadMeetPointSession, saveMeetPointSession } from '@/state/meetpoint-session';
 import type { DirectResponse, Participant, Place, RecommendationResponse } from '@/types/meetpoint';
 
 type MeetPointState = {
@@ -20,6 +21,7 @@ type MeetPointState = {
 };
 
 const Context = createContext<MeetPointState | null>(null);
+const emptyRecommendation: RecommendationResponse = { resultType: 'unverifiable', results: [] };
 
 export function MeetPointProvider({ children }: PropsWithChildren) {
   const [participants, setParticipants] = useState(initialParticipants);
@@ -29,8 +31,23 @@ export function MeetPointProvider({ children }: PropsWithChildren) {
     return nextDay.toISOString().slice(0, 10);
   });
   const [arrivalTime, setArrivalTime] = useState('18:30');
-  const [recommendation, setRecommendation] = useState(demoQualified);
+  const [recommendation, setRecommendationState] = useState(emptyRecommendation);
   const [directResult, setDirectResult] = useState<DirectResponse>();
+
+  useEffect(() => {
+    const saved = loadMeetPointSession();
+    if (!saved) return;
+    setCity(saved.city);
+    setDate(saved.date);
+    setArrivalTime(saved.arrivalTime);
+    setParticipants(saved.participants);
+    setRecommendationState(saved.recommendation);
+  }, []);
+
+  const setRecommendation = (result: RecommendationResponse) => {
+    setRecommendationState(result);
+    saveMeetPointSession({ city, date, arrivalTime, participants, recommendation: result });
+  };
 
   const value = useMemo<MeetPointState>(() => ({
     city, date, arrivalTime, participants, recommendation, directResult,
