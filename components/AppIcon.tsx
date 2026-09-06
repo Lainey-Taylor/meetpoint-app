@@ -7,6 +7,7 @@ const glyphs: Record<string, string> = {
   'xmark.circle.fill': '×', plus: '+', clock: '◷', 'location.magnifyingglass': '⌖',
   'arrow.triangle.branch': '⑂', 'checkmark.seal.fill': '✓', map: '⌘', 'map.fill': '⌘',
   'gearshape.fill': '⚙', 'building.2.fill': '▥', 'house.fill': '⌂', 'chevron.right': '›',
+  'person.badge.plus': '♙+',
   'shield.fill': '◆', 'questionmark.circle.fill': '?', 'chevron.left': '‹',
   'square.and.arrow.up': '↥', 'exclamationmark.triangle.fill': '!', ellipsis: '•••',
 };

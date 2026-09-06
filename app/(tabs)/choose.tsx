@@ -5,6 +5,7 @@ import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View } from 
 import { AppIcon } from '@/components/AppIcon';
 import { CustomDatePicker } from '@/components/CustomDatePicker';
 import { PlaceAutocomplete } from '@/components/PlaceAutocomplete';
+import { PixelAvatar } from '@/components/PixelAvatar';
 import { Card, Chip, Header, PrimaryButton, Screen, SectionTitle } from '@/components/ui';
 import { colors } from '@/constants/theme';
 import { modeLabels } from '@/data/demo';
@@ -77,10 +78,10 @@ export default function ChooseScreen() {
         </View>
       </Card>
 
-      <SectionTitle title="成员出发配置" subtitle="由发起人代填，每人至少选择一种方式" />
+      <SectionTitle title="成员出发配置" />
       {state.participants.map((person, index) => (
         <Card key={person.id} style={styles.personCard}>
-          <View style={styles.personHead}><View style={styles.personIdentity}><View style={[styles.letter, { backgroundColor: index ? '#E8F0FF' : colors.brandSoft }]}><Text style={[styles.letterText, { color: index ? colors.blue : colors.brand }]}>{person.name.trim().slice(0, 1) || '?'}</Text></View><TextInput accessibilityLabel={`成员${index + 1}名称`} value={person.name} onChangeText={(name) => updatePerson(person.id, { name })} maxLength={20} selectTextOnFocus style={styles.personNameInput} /></View>{!person.owner ? <Pressable onPress={() => state.setParticipants(state.participants.filter((p) => p.id !== person.id))}><AppIcon name="xmark.circle.fill" size={21} color={colors.faint} /></Pressable> : null}</View>
+          <View style={styles.personHead}><View style={styles.personIdentity}><PixelAvatar size={32} variant={index} /><TextInput accessibilityLabel={`成员${index + 1}名称`} value={person.name} onChangeText={(name) => updatePerson(person.id, { name })} maxLength={20} selectTextOnFocus style={styles.personNameInput} /></View>{!person.owner ? <Pressable onPress={() => state.setParticipants(state.participants.filter((p) => p.id !== person.id))}><AppIcon name="xmark.circle.fill" size={21} color={colors.faint} /></Pressable> : null}</View>
           <PlaceAutocomplete city={state.city} value={person.address} placeholder="输入地址或地标" onChangeText={(address) => updatePerson(person.id, { address, selectedPlace: undefined })} onSelect={(place) => state.setParticipantPlace(person.id, place)} />
           <Text style={styles.fieldLabel}>可接受的交通方式与上限</Text>
           <View style={styles.modeWrap}>{availableModes.map((mode) => {
@@ -98,7 +99,7 @@ export default function ChooseScreen() {
       {state.participants.length < 4 ? <Pressable style={styles.add} onPress={() => state.setParticipants([...state.participants, { id: `p-${Date.now()}`, name: `成员${state.participants.length + 1}`, address: '', modes: [{ mode: 'transit', limitMinutes: 50 }] }])}><AppIcon name="plus" size={14} color={colors.brand} /><Text style={styles.addText}>添加成员（{state.participants.length}/4）</Text></Pressable> : null}
 
       <Card>
-        <SectionTitle title="餐厅筛选偏好" subtitle="选填" />
+        <SectionTitle title="餐厅筛选偏好" />
         <Text style={styles.filterLabel}>人均预算上限</Text><View style={styles.chips}>{budgetOptions.map((n) => <Chip key={n} label={n ? `¥${n}内` : '不限'} active={budget === n} onPress={() => setBudget(n)} />)}</View>
         <Text style={styles.filterLabel}>只看这些菜系（多选）</Text><View style={styles.chips}>{cuisines.map((x) => <Chip key={x} label={x} active={include.includes(x)} onPress={() => setInclude(include.includes(x) ? include.filter((y) => y !== x) : [...include, x])} />)}</View>
         <Text style={styles.filterLabel}>绝对不能接受（多选）</Text><View style={styles.chips}>{exclusions.map((x) => <Chip key={x} label={`避开${x}`} tone="danger" active={exclude.includes(x)} onPress={() => setExclude(exclude.includes(x) ? exclude.filter((y) => y !== x) : [...exclude, x])} />)}</View>
@@ -119,7 +120,7 @@ const styles = StyleSheet.create({
   eventControl: { flex: 1, flexDirection: 'row', flexWrap: 'wrap', gap: 6, paddingVertical: 8 },
   timeControl: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start', gap: 7 },
   timeInput: { minWidth: 72, color: colors.text, fontWeight: '800', fontSize: 14, backgroundColor: colors.subtle, paddingHorizontal: 10, paddingVertical: 7, borderRadius: 10, textAlign: 'center' },
-  personCard: { gap: 11, zIndex: 5 }, personHead: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }, personIdentity: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 9 }, letter: { width: 32, height: 32, borderRadius: 11, overflow: 'hidden', alignItems: 'center', justifyContent: 'center' }, letterText: { fontSize: 13, lineHeight: 16, fontWeight: '900', textAlign: 'center' }, personNameInput: { flex: 1, color: colors.text, fontSize: 14, lineHeight: 18, fontWeight: '800', paddingVertical: 5 },
+  personCard: { gap: 11, zIndex: 5 }, personHead: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }, personIdentity: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 9 }, personNameInput: { flex: 1, color: colors.text, fontSize: 14, lineHeight: 18, fontWeight: '800', paddingVertical: 5 },
   fieldLabel: { color: colors.muted, fontSize: 10, fontWeight: '700' }, modeWrap: { flexDirection: 'row', flexWrap: 'wrap', gap: 7 }, mode: { minHeight: 34, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 9, borderRadius: 11, backgroundColor: colors.subtle, borderWidth: 1, borderColor: colors.subtle }, modeActive: { backgroundColor: colors.brandSoft, borderColor: '#F1C7B3' }, modeText: { color: colors.muted, fontSize: 11, fontWeight: '600' }, modeTextActive: { color: colors.brand, fontWeight: '800' }, limit: { width: 30, padding: 0, marginLeft: 5, fontSize: 11, fontWeight: '800', color: colors.text, textAlign: 'right' }, minutes: { color: colors.muted, fontSize: 10, marginLeft: 2 },
   add: { minHeight: 47, borderRadius: 16, borderWidth: 1, borderStyle: 'dashed', borderColor: '#D5B09D', backgroundColor: '#FFFBF8', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6 }, addText: { color: colors.brand, fontSize: 12, fontWeight: '800' },
   filterLabel: { color: colors.muted, fontSize: 11, fontWeight: '700', marginTop: 14, marginBottom: 7 }, chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 7 }, notice: { color: colors.warning, fontSize: 11, textAlign: 'center' },

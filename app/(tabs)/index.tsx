@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { router } from 'expo-router';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { ImageBackground, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { AppIcon } from '@/components/AppIcon';
+import { PixelAvatar } from '@/components/PixelAvatar';
 import { Card, Header, PrimaryButton, Screen, SectionTitle } from '@/components/ui';
 import { colors } from '@/constants/theme';
 import { recommendRestaurants } from '@/services/meetpoint-api';
@@ -42,16 +43,16 @@ export default function HomeScreen() {
 
   return (
     <Screen>
-      <Header action={<View style={styles.profile}><Text style={styles.avatar}>张</Text><Text style={styles.profileText}>小张</Text></View>} />
-      <View style={styles.hero}>
-        <View style={styles.heroOrbOne} /><View style={styles.heroOrbTwo} />
-        <Text style={styles.heroTitle}>找到大家都想去的餐厅</Text>
+      <Header action={<View style={styles.profile}><PixelAvatar size={28} /><Text style={styles.profileText}>小张</Text></View>} />
+      <ImageBackground source={require('../../assets/images/home-hero-blue.jpg')} resizeMode="cover" style={styles.hero} imageStyle={styles.heroImage}>
+        <View style={styles.heroShade} />
+        <Text style={styles.heroTitle}>找到大家都满意的餐厅</Text>
         <Text style={styles.heroBody}>录入每个人的出发地、交通方式与时间上限，快速生成可以一起选的餐厅清单。</Text>
-        <Pressable style={styles.heroMain} onPress={() => router.push('/choose')}><AppIcon name="plus.circle.fill" size={18} color={colors.brand} /><Text style={styles.heroMainText}>创建一次聚餐选址</Text></Pressable>
+        <Pressable style={styles.heroMain} onPress={() => router.push('/choose')}><AppIcon name="plus.circle.fill" size={18} color={colors.blue} /><Text style={styles.heroMainText}>创建一次聚餐选址</Text></Pressable>
         <Pressable style={styles.heroSecondary} onPress={() => router.push('/direct')}><AppIcon name="scope" size={15} color="#FFFFFF" /><Text style={styles.heroSecondaryText}>已有餐厅？直接测算通勤</Text></Pressable>
-      </View>
+      </ImageBackground>
 
-      <SectionTitle title="最近的聚餐" subtitle="保存后的方案会出现在这里" />
+      <SectionTitle title="最近的聚餐" />
       <Card>
         <Text style={styles.dinnerTitle}>周末朋友聚餐</Text>
         <View style={styles.recommend}><Text style={styles.recommendLabel}>当前首选</Text><Text style={styles.recommendTitle}>三里屯太古里附近</Text><Text style={styles.recommendMeta}>两人预计 36–42 分钟</Text></View>
@@ -76,15 +77,13 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   profile: { flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: colors.subtle, borderRadius: 18, padding: 3, paddingRight: 10 },
-  avatar: { width: 26, height: 26, borderRadius: 13, textAlign: 'center', textAlignVertical: 'center', backgroundColor: colors.brand, color: '#fff', fontWeight: '800', fontSize: 11, overflow: 'hidden' },
   profileText: { color: colors.text, fontSize: 12, fontWeight: '700' },
-  hero: { backgroundColor: colors.brand, borderRadius: 26, padding: 20, gap: 10, overflow: 'hidden' },
-  heroOrbOne: { position: 'absolute', width: 170, height: 170, borderRadius: 85, borderWidth: 12, borderColor: 'rgba(255,255,255,.10)', right: -62, bottom: -68 },
-  heroOrbTwo: { position: 'absolute', width: 210, height: 210, borderRadius: 105, borderWidth: 1, borderColor: 'rgba(255,255,255,.18)', right: -95, top: -110 },
+  hero: { width: '100%', minHeight: 260, backgroundColor: '#315C8D', borderRadius: 26, padding: 20, gap: 10, overflow: 'hidden' },
+  heroImage: { borderRadius: 26 }, heroShade: { position: 'absolute', inset: 0, backgroundColor: 'rgba(13,42,76,.18)' },
   heroTitle: { color: '#FFFFFF', fontSize: 23, lineHeight: 30, fontWeight: '900', letterSpacing: -.5 },
   heroBody: { color: '#FFF4ED', fontSize: 13, lineHeight: 20, maxWidth: 310, fontWeight: '600', marginBottom: 2 },
   heroMain: { minHeight: 48, borderRadius: 16, backgroundColor: '#fff', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 4 },
-  heroMainText: { color: colors.brand, fontSize: 14, fontWeight: '800' },
+  heroMainText: { color: colors.blue, fontSize: 14, fontWeight: '800' },
   heroSecondary: { minHeight: 42, borderRadius: 15, backgroundColor: 'rgba(255,255,255,.17)', borderWidth: 1, borderColor: 'rgba(255,255,255,.24)', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 7 },
   heroSecondaryText: { color: '#fff', fontSize: 12, fontWeight: '700' },
   dinnerTitle: { color: colors.text, fontSize: 16, fontWeight: '800' },
