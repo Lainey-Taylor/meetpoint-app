@@ -43,7 +43,7 @@ export default function HomeScreen() {
 
   return (
     <Screen>
-      <Header action={<View style={styles.profile}><PixelAvatar size={28} /><Text style={styles.profileText}>小张</Text></View>} />
+      <Header action={<View style={styles.profile}><PixelAvatar size={28} /></View>} />
       <ImageBackground source={require('../../assets/images/home-hero-blue.jpg')} resizeMode="cover" style={styles.hero} imageStyle={styles.heroImage}>
         <View style={styles.heroShade} />
         <Text style={styles.heroTitle}>找到大家都满意的餐厅</Text>
@@ -76,8 +76,7 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  profile: { flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: colors.subtle, borderRadius: 18, padding: 3, paddingRight: 10 },
-  profileText: { color: colors.text, fontSize: 12, fontWeight: '700' },
+  profile: { alignItems: 'center', justifyContent: 'center', backgroundColor: colors.subtle, borderRadius: 18, padding: 3 },
   hero: { width: '100%', minHeight: 260, backgroundColor: '#315C8D', borderRadius: 26, padding: 20, gap: 10, overflow: 'hidden' },
   heroImage: { borderRadius: 26 }, heroShade: { position: 'absolute', inset: 0, backgroundColor: 'rgba(13,42,76,.18)' },
   heroTitle: { color: '#FFFFFF', fontSize: 23, lineHeight: 30, fontWeight: '900', letterSpacing: -.5 },
