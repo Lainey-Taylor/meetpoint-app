@@ -11,6 +11,8 @@ const glyphs: Record<string, string> = {
   'point.3.connected': '⌖',
   'shield.fill': '◆', 'questionmark.circle.fill': '?', 'chevron.left': '‹',
   'square.and.arrow.up': '↥', 'exclamationmark.triangle.fill': '!', ellipsis: '•••',
+  celebration: '✦', calendar: '▣', history: '↶', sliders: '≡', route: '⑂', star: '★',
+  train: '▣', car: '▰', bike: '♢', scooter: '♧', walk: '⚑', 'add-person': '♙+',
 };
 
 export function AppIcon({ name, size = 20, color, style }: { name: string; size?: number; color: ColorValue; style?: StyleProp<TextStyle> }) {

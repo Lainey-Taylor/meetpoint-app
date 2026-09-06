@@ -5,9 +5,9 @@ import { AppIcon } from '@/components/AppIcon';
 import { colors } from '@/constants/theme';
 
 const tabs = [
-  ['index', '首页', 'point.3.connected'],
-  ['choose', '聚餐选址', 'location.viewfinder'],
-  ['direct', '指定测算', 'function'],
+  ['index', '首页', 'house.fill'],
+  ['choose', '聚餐选址', 'mappin.and.ellipse'],
+  ['direct', '测算', 'route'],
   ['profile', '我的', 'person'],
 ] as const;
 
@@ -17,7 +17,7 @@ export default function TabLayout() {
       headerShown: false,
       tabBarActiveTintColor: colors.brand,
       tabBarInactiveTintColor: colors.faint,
-      tabBarStyle: { height: Platform.OS === 'ios' ? 84 : 66, paddingTop: 7, paddingBottom: Platform.OS === 'ios' ? 22 : 8, backgroundColor: 'rgba(255,255,255,0.96)', borderTopColor: colors.line },
+      tabBarStyle: { height: Platform.OS === 'ios' ? 84 : 66, paddingTop: 7, paddingBottom: Platform.OS === 'ios' ? 22 : 8, backgroundColor: 'rgba(255,255,255,0.96)', borderTopColor: colors.line, shadowColor: '#20242C', shadowOpacity: .06, shadowRadius: 12 },
       tabBarLabelStyle: { fontSize: 10, fontWeight: '700' },
     }}>
       {tabs.map(([name, title, icon]) => <Tabs.Screen key={name} name={name} options={{ title, tabBarIcon: ({ color }) => name === 'profile' ? <PersonTabIcon color={color} /> : <AppIcon name={icon} size={21} color={color} /> }} />)}

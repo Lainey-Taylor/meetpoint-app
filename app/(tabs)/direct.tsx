@@ -3,7 +3,7 @@ import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 
 import { AppIcon } from '@/components/AppIcon';
 import { PlaceAutocomplete } from '@/components/PlaceAutocomplete';
-import { Card, Header, PrimaryButton, Screen, SectionTitle } from '@/components/ui';
+import { Card, PrimaryButton, Screen } from '@/components/ui';
 import { colors } from '@/constants/theme';
 import { demoDirectRestaurant, modeLabels } from '@/data/demo';
 import { calculateRestaurantCommute } from '@/services/meetpoint-api';
@@ -11,6 +11,7 @@ import { useMeetPoint } from '@/state/MeetPointContext';
 import type { DirectResponse, Place, TravelMode } from '@/types/meetpoint';
 
 const demoMinutes: Record<TravelMode, number> = { transit: 42, driving: 31, walking: 126, bicycling: 48, electrobike: 36 };
+const modeIcons: Record<TravelMode, string> = { transit: 'train', driving: 'car', bicycling: 'bike', electrobike: 'scooter', walking: 'walk' };
 
 export default function DirectScreen() {
   const state = useMeetPoint();
@@ -33,30 +34,18 @@ export default function DirectScreen() {
     } finally { setLoading(false); }
   };
 
-  return (
-    <Screen>
-      <Header badge="指定测算" />
-      <Card style={styles.searchCard}>
-        <SectionTitle title="指定一家餐厅" subtitle="为每位成员同时计算 5 种交通方式" />
-        <PlaceAutocomplete city={state.city} kind="restaurant-or-address" value={query} placeholder="输入餐厅名称或地址" onChangeText={(text) => { setQuery(text); setRestaurant(undefined); }} onSelect={(place) => { setRestaurant(place); setQuery(place.name); }} />
-        <PrimaryButton label={loading ? '正在计算 5 种路线…' : '开始全员通勤测算'} icon="arrow.triangle.branch" onPress={calculate} disabled={loading || !query.trim()} />
-        {loading ? <ActivityIndicator color={colors.brand} /> : null}
-      </Card>
+  return <Screen>
+    <View style={styles.pageHead}><View><Text style={styles.title}>指定一家餐厅</Text><Text style={styles.subtitle}>输入目标餐厅，为每位成员同时测算 5 种交通耗时</Text></View><View style={styles.headDot} /></View>
+    <Card style={styles.searchCard}><View style={styles.sectionHead}><View style={styles.dot} /><Text style={styles.sectionTitle}>目标餐厅</Text></View><PlaceAutocomplete city={state.city} kind="restaurant-or-address" value={query} placeholder="输入餐厅名称或地址" onChangeText={(text) => { setQuery(text); setRestaurant(undefined); }} onSelect={(place) => { setRestaurant(place); setQuery(place.name); }} /><Text style={styles.history}>历史搜索：　猁xMCC·精酿餐吧　　羲和雅苑烤鸭坊</Text></Card>
+    <Card style={styles.membersCard}><View style={styles.sectionHead}><View style={[styles.dot, { backgroundColor: colors.secondary }]} /><Text style={styles.sectionTitle}>成员出发配置</Text><Text style={styles.add}>♙ 添加成员</Text></View>{state.participants.map((person, index) => <View key={person.id} style={[styles.member, index > 0 && styles.memberGap]}><View style={styles.memberTop}><View style={[styles.memberBadge, index > 0 && styles.friendBadge]}><Text style={[styles.memberBadgeText, index > 0 && styles.friendBadgeText]}>{person.name.slice(0, 1)}</Text></View><View><Text style={styles.memberName}>{person.name}{person.owner ? '（发起人）' : ''}</Text><Text style={styles.memberAddress}>⌖ {person.address}</Text></View></View><View style={styles.modeLimits}>{(['transit', 'driving', 'bicycling', 'electrobike', 'walking'] as TravelMode[]).map((mode) => { const active = person.modes.find((item) => item.mode === mode); return <View key={mode} style={[styles.modeLimit, !active && styles.modeDisabled]}><AppIcon name={modeIcons[mode]} size={14} color={active ? colors.brand : colors.faint} /><Text style={styles.modeLabel}>{modeLabels[mode]}</Text><Text style={styles.modeValue}>{active ? `${active.limitMinutes}分` : '未开启'}</Text></View>; })}</View></View>)}<PrimaryButton label={loading ? '正在测算 5 种路线…' : '开始全员多交通测算'} icon="route" onPress={calculate} disabled={loading || !query.trim()} />{loading ? <ActivityIndicator color={colors.brand} /> : null}</Card>
 
-      {result ? <>
-        <View style={styles.hero}><View style={styles.heroIcon}><AppIcon name="checkmark.seal.fill" size={24} color="#FFFFFF" /></View><View style={{ flex: 1 }}><Text style={styles.heroOverline}>单店验证完成</Text><Text style={styles.heroTitle}>{result.restaurant.name}</Text><Text style={styles.heroMeta}>{[result.restaurant.district, result.restaurant.address].filter(Boolean).join(' · ')}</Text></View></View>
-        <SectionTitle title="各成员到达耗时" subtitle={source} />
-        {result.participantResults.map((person, index) => <Card key={person.name}>
-          <View style={styles.personHead}><Text style={styles.personLetter}>{String.fromCharCode(65 + index)}</Text><Text style={styles.personName}>{person.name}</Text></View>
-          <View style={styles.routeGrid}>{person.routes.map((route) => <View key={route.mode} style={[styles.route, route.qualifies === false && styles.routeBad]}><Text style={styles.routeMode}>{modeLabels[route.mode]}</Text><Text style={styles.routeTime}>{route.status === 'ok' ? `${route.displayMinutes} 分` : '无法计算'}</Text><Text style={styles.routeNote}>{route.limitMinutes ? (route.qualifies === false ? `超过 ${route.limitMinutes} 分上限` : `${route.limitMinutes} 分上限`) : '未设置上限'}</Text></View>)}</View>
-        </Card>)}
-      </> : <Card style={styles.empty}><AppIcon name="map" size={31} color={colors.brand} /><Text style={styles.emptyTitle}>先选择餐厅</Text><Text style={styles.emptyBody}>结果会按成员名称展示每个人的 5 种通勤时间。</Text></Card>}
-    </Screen>
-  );
+    {result ? <Card><View style={styles.sectionHead}><View style={[styles.dot, { backgroundColor: colors.success }]} /><Text style={styles.sectionTitle}>全员 5 种交通测算结果</Text><Text style={styles.source}>{source}</Text></View><View style={styles.restaurant}><View><Text style={styles.restaurantName}>{result.restaurant.name}</Text><Text style={styles.restaurantAddress}>{[result.restaurant.district, result.restaurant.address].filter(Boolean).join(' · ')}</Text></View><Text style={styles.rating}>★ {result.restaurant.rating || '待定'}</Text></View>{result.participantResults.map((person, index) => <View key={person.name} style={styles.resultPerson}><View style={styles.resultName}><View style={[styles.memberBadge, index > 0 && styles.friendBadge]}><Text style={[styles.memberBadgeText, index > 0 && styles.friendBadgeText]}>{person.name.slice(0, 1)}</Text></View><Text style={styles.memberName}>{person.name}的通勤耗时</Text></View><View style={styles.resultModes}>{person.routes.map((route) => <View key={route.mode} style={[styles.resultMode, route.qualifies && styles.qualifies]}><Text style={styles.resultModeLabel}>{modeLabels[route.mode]}</Text><Text style={[styles.resultTime, route.qualifies && { color: colors.success }]}>{route.status === 'ok' ? `${route.displayMinutes}分` : '—'}</Text></View>)}</View></View>)}</Card> : null}
+  </Screen>;
 }
 
 const styles = StyleSheet.create({
-  searchCard: { gap: 13 }, hero: { borderRadius: 23, backgroundColor: colors.brand, padding: 18, flexDirection: 'row', alignItems: 'center', gap: 12 }, heroIcon: { width: 46, height: 46, borderRadius: 16, backgroundColor: 'rgba(255,255,255,.18)', alignItems: 'center', justifyContent: 'center' }, heroOverline: { color: '#DCEAF7', fontSize: 10, fontWeight: '700' }, heroTitle: { color: '#fff', fontSize: 18, fontWeight: '900', marginTop: 3 }, heroMeta: { color: '#DCEAF7', fontSize: 10, marginTop: 4 },
-  personHead: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 11 }, personLetter: { width: 30, height: 30, borderRadius: 10, overflow: 'hidden', backgroundColor: colors.brandSoft, color: colors.brand, fontWeight: '900', fontSize: 12, textAlign: 'center', textAlignVertical: 'center' }, personName: { color: colors.text, fontSize: 14, fontWeight: '800' }, routeGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 }, route: { width: '48.5%', borderRadius: 13, padding: 10, backgroundColor: '#F4F7F6' }, routeBad: { backgroundColor: colors.dangerSoft }, routeMode: { color: colors.muted, fontSize: 10 }, routeTime: { color: colors.text, fontSize: 16, fontWeight: '900', marginTop: 3 }, routeNote: { color: colors.faint, fontSize: 9, marginTop: 3 },
-  empty: { alignItems: 'center', paddingVertical: 35 }, emptyTitle: { color: colors.text, fontWeight: '800', fontSize: 15, marginTop: 10 }, emptyBody: { color: colors.muted, fontSize: 11, lineHeight: 17, textAlign: 'center', maxWidth: 270, marginTop: 5 },
+  pageHead: { minHeight: 116, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }, title: { color: colors.text, fontSize: 30, lineHeight: 36, fontWeight: '900', letterSpacing: -1 }, subtitle: { color: colors.muted, fontSize: 12, marginTop: 6 }, headDot: { width: 54, height: 54, borderRadius: 27, backgroundColor: '#fff', shadowColor: '#20242C', shadowOpacity: .08, shadowRadius: 10, elevation: 2 },
+  searchCard: { gap: 15 }, sectionHead: { flexDirection: 'row', alignItems: 'center', gap: 9 }, dot: { width: 13, height: 13, borderRadius: 7, backgroundColor: colors.brand }, sectionTitle: { flex: 1, color: colors.text, fontSize: 17, fontWeight: '900' }, history: { color: colors.faint, fontSize: 10, lineHeight: 17 }, add: { color: colors.brand, fontSize: 10, fontWeight: '800' },
+  membersCard: { gap: 14 }, member: { backgroundColor: colors.background, borderRadius: 15, padding: 13 }, memberGap: { marginTop: 0 }, memberTop: { flexDirection: 'row', alignItems: 'center', gap: 10 }, memberBadge: { width: 36, height: 36, borderRadius: 18, backgroundColor: colors.blue, alignItems: 'center', justifyContent: 'center' }, friendBadge: { backgroundColor: '#FFA000' }, memberBadgeText: { color: '#fff', fontWeight: '900' }, friendBadgeText: { color: '#fff' }, memberName: { color: colors.text, fontSize: 13, fontWeight: '900' }, memberAddress: { color: colors.muted, fontSize: 10, marginTop: 4 }, modeLimits: { flexDirection: 'row', marginTop: 13, gap: 5 }, modeLimit: { flex: 1, minWidth: 0, minHeight: 68, backgroundColor: '#fff', borderRadius: 10, borderWidth: 1, borderColor: colors.line, alignItems: 'center', justifyContent: 'center', padding: 4 }, modeDisabled: { opacity: .5 }, modeLabel: { color: colors.muted, fontSize: 8, marginTop: 4, textAlign: 'center' }, modeValue: { color: colors.text, fontSize: 10, fontWeight: '900', marginTop: 3 },
+  source: { color: colors.faint, fontSize: 8 }, restaurant: { backgroundColor: colors.background, borderRadius: 13, padding: 13, marginTop: 14, flexDirection: 'row', justifyContent: 'space-between' }, restaurantName: { color: colors.text, fontSize: 13, fontWeight: '900' }, restaurantAddress: { color: colors.muted, fontSize: 9, marginTop: 4, maxWidth: 250 }, rating: { color: colors.brandBright, fontSize: 15, fontWeight: '900' }, resultPerson: { borderWidth: 1, borderColor: colors.line, borderRadius: 14, padding: 13, marginTop: 12 }, resultName: { flexDirection: 'row', alignItems: 'center', gap: 9 }, resultModes: { flexDirection: 'row', gap: 5, marginTop: 11 }, resultMode: { flex: 1, minWidth: 0, backgroundColor: colors.subtle, borderRadius: 10, paddingVertical: 9, alignItems: 'center' }, qualifies: { backgroundColor: colors.successSoft, borderWidth: 1, borderColor: '#B9EEDB' }, resultModeLabel: { color: colors.muted, fontSize: 8 }, resultTime: { color: colors.text, fontSize: 12, fontWeight: '900', marginTop: 4 },
 });
