@@ -38,6 +38,7 @@
     "check:api-timeout": "node scripts/check-api-timeout.mjs",
     "check:home-navigation": "node scripts/check-home-recent-navigation.mjs",
     "check:results-state": "node scripts/check-results-state.mjs",
+    "check:stitch-interactions": "node scripts/check-stitch-interactions.mjs",
     "typecheck": "tsc --noEmit"
   },
   "private": true
