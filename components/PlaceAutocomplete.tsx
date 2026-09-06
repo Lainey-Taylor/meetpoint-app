@@ -6,10 +6,11 @@ import { colors } from '@/constants/theme';
 import { suggestPlaces } from '@/services/meetpoint-api';
 import type { Place } from '@/types/meetpoint';
 
-export function PlaceAutocomplete({ city, value, kind = 'place', placeholder, onChangeText, onSelect }: {
+export function PlaceAutocomplete({ city, value, kind = 'place', leadingIcon = 'mappin.and.ellipse', placeholder, onChangeText, onSelect }: {
   city: string;
   value: string;
   kind?: 'place' | 'restaurant' | 'restaurant-or-address';
+  leadingIcon?: string;
   placeholder: string;
   onChangeText: (text: string) => void;
   onSelect: (place: Place) => void;
@@ -35,7 +36,7 @@ export function PlaceAutocomplete({ city, value, kind = 'place', placeholder, on
   return (
     <View style={styles.wrap}>
       <View style={styles.inputRow}>
-        <AppIcon name={kind === 'restaurant' ? 'magnifyingglass' : 'mappin.and.ellipse'} size={16} color={colors.brand} />
+        <AppIcon name={leadingIcon} size={16} color={colors.brand} />
         <TextInput
           value={value}
           onChangeText={onChangeText}

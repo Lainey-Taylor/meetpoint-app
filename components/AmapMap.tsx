@@ -1,13 +1,13 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native';
 import { WebView } from 'react-native-webview';
 
 import { buildAmapUrl, type MapPoint } from '@/components/amap-map-url';
 import { colors } from '@/constants/theme';
 
-export function AmapMap({ members, restaurants }: { members: MapPoint[]; restaurants: MapPoint[] }) {
-  const uri = buildAmapUrl(members, restaurants);
+export function AmapMap({ members, restaurants, allowEmpty = false, style }: { members: MapPoint[]; restaurants: MapPoint[]; allowEmpty?: boolean; style?: StyleProp<ViewStyle> }) {
+  const uri = buildAmapUrl(members, restaurants, allowEmpty);
   if (!uri) return <MapUnavailable />;
-  return <View style={styles.mapFrame}><WebView source={{ uri }} style={styles.webView} javaScriptEnabled domStorageEnabled scrollEnabled={false} bounces={false} /></View>;
+  return <View style={[styles.mapFrame, style]}><WebView source={{ uri }} style={styles.webView} javaScriptEnabled domStorageEnabled scrollEnabled={false} bounces={false} /></View>;
 }
 
 function MapUnavailable() {
