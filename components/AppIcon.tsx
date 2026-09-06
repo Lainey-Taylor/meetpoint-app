@@ -3,7 +3,7 @@ import { StyleSheet, Text, type ColorValue, type StyleProp, type TextStyle } fro
 const glyphs: Record<string, string> = {
   'fork.knife': '♨', 'person.2.fill': '●●', 'plus.circle.fill': '＋', scope: '◎',
   'arrow.right': '→', 'location.viewfinder': '◎', function: 'ƒx', person: '●',
-  'mappin.and.ellipse': '⌖', magnifyingglass: '⌕', mappin: '●', 'arrow.turn.up.right': '↗',
+  'mappin.and.ellipse': '📍', magnifyingglass: '⌕', mappin: '📍', 'arrow.turn.up.right': '↗',
   'xmark.circle.fill': '×', plus: '+', clock: '◷', 'location.magnifyingglass': '⌖',
   'arrow.triangle.branch': '⑂', 'checkmark.seal.fill': '✓', map: '⌘', 'map.fill': '⌘',
   'gearshape.fill': '⚙', 'building.2.fill': '▥', 'house.fill': '⌂', 'chevron.right': '›',

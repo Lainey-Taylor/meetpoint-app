@@ -39,6 +39,7 @@
     "check:home-navigation": "node scripts/check-home-recent-navigation.mjs",
     "check:results-state": "node scripts/check-results-state.mjs",
     "check:stitch-interactions": "node scripts/check-stitch-interactions.mjs",
+    "check:mobile-ux-polish": "node scripts/check-mobile-ux-polish.mjs",
     "typecheck": "tsc --noEmit"
   },
   "private": true
