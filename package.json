@@ -34,6 +34,7 @@
     "web": "expo start --web",
     "build:web": "expo export --platform web",
     "server": "node server/meetpoint-server.mjs",
+    "check:amap-basemap": "node scripts/check-amap-basemap.mjs",
     "check:api-timeout": "node scripts/check-api-timeout.mjs",
     "check:results-state": "node scripts/check-results-state.mjs",
     "typecheck": "tsc --noEmit"

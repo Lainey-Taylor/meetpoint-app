@@ -42,6 +42,7 @@ export type RestaurantResult = Place & {
   rating?: number | null;
   cost?: number | null;
   type?: string;
+  tag?: string;
   qualified?: boolean;
   maxOverrunSeconds?: number | null;
   participantResults: ParticipantResult[];

@@ -1178,7 +1178,7 @@ function sendMapHtml(response, requestUrl) {
     'Content-Length': Buffer.byteLength(body),
     'Cache-Control': 'no-store',
     'X-Content-Type-Options': 'nosniff',
-    'Referrer-Policy': 'no-referrer',
+    'Referrer-Policy': 'strict-origin-when-cross-origin',
   });
   response.end(body);
 }
