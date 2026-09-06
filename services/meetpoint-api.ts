@@ -6,10 +6,12 @@ const API_BASE = (Platform.OS === 'web' && !__DEV__
   ? ''
   : configuredApiBase || (Platform.OS === 'web' ? '' : 'http://127.0.0.1:4173')
 ).replace(/\/$/, '');
+const DEFAULT_TIMEOUT_MS = 30_000;
+const CALCULATION_TIMEOUT_MS = 70_000;
 
-async function request<T>(path: string, init?: RequestInit): Promise<T> {
+async function request<T>(path: string, init?: RequestInit, timeoutMs = DEFAULT_TIMEOUT_MS): Promise<T> {
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 30_000);
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
     const response = await fetch(`${API_BASE}${path}`, {
       ...init,
@@ -19,6 +21,9 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     const payload = await response.json();
     if (!response.ok) throw new Error(payload?.error || `请求失败（${response.status}）`);
     return payload as T;
+  } catch (error) {
+    if (controller.signal.aborted) throw new Error('计算等待时间过长，请重试');
+    throw error;
   } finally {
     clearTimeout(timer);
   }
@@ -62,7 +67,7 @@ export function recommendRestaurants(input: {
         excludeCuisines: input.excludeCuisines || [],
       },
     }),
-  });
+  }, CALCULATION_TIMEOUT_MS);
 }
 
 export function calculateRestaurantCommute(input: {
@@ -81,7 +86,7 @@ export function calculateRestaurantCommute(input: {
       participants: input.participants.map(serializeParticipant),
       restaurant: { query: input.restaurant.name, selectedPlace: input.restaurant },
     }),
-  });
+  }, CALCULATION_TIMEOUT_MS);
 }
 
 export { API_BASE };
