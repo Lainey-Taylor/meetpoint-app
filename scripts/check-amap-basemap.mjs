@@ -14,4 +14,9 @@ if (!/['"]Referrer-Policy['"]\s*:\s*['"]strict-origin-when-cross-origin['"]/.tes
   process.exit(1);
 }
 
+if (!/showLabel:true/.test(mapHandler) || !/features:\['bg','road','building','point'\]/.test(mapHandler)) {
+  console.error('FAIL 地图没有显式启用道路、建筑和兴趣点标签图层');
+  process.exit(1);
+}
+
 console.log('PASS 地图页会向高德发送站点来源用于底图校验');
