@@ -4,7 +4,7 @@ const palettes = [
   { background: '#DCEEFF', hair: '#244A73', shirt: '#3F7AC4', skin: '#FFD0B5' },
   { background: '#F0E7FF', hair: '#543E6E', shirt: '#8B68B8', skin: '#F4C6A8' },
   { background: '#E2F5EF', hair: '#244F46', shirt: '#37917A', skin: '#EFC5A7' },
-  { background: '#FFF0E6', hair: '#6A4030', shirt: '#C86D44', skin: '#FFD2B5' },
+  { background: '#E7F0F8', hair: '#314D68', shirt: '#5B83A8', skin: '#FFD2B5' },
 ];
 
 export function PixelAvatar({ size = 32, variant = 0 }: { size?: number; variant?: number }) {

@@ -13,7 +13,7 @@ export default function Root({ children }: { children: ReactNode }) {
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="聚点聚餐 MeetPoint：按每位成员的出发地、交通方式与通勤上限，寻找大家都能接受的餐厅。" />
-        <meta name="theme-color" content="#C86D44" />
+        <meta name="theme-color" content="#4B79A8" />
         <title>聚点聚餐 MeetPoint</title>
 
         {/*

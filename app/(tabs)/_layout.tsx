@@ -5,7 +5,7 @@ import { AppIcon } from '@/components/AppIcon';
 import { colors } from '@/constants/theme';
 
 const tabs = [
-  ['index', '首页', 'fork.knife'],
+  ['index', '首页', 'point.3.connected'],
   ['choose', '聚餐选址', 'location.viewfinder'],
   ['direct', '指定测算', 'function'],
   ['profile', '我的', 'person'],

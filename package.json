@@ -36,6 +36,7 @@
     "server": "node server/meetpoint-server.mjs",
     "check:amap-basemap": "node scripts/check-amap-basemap.mjs",
     "check:api-timeout": "node scripts/check-api-timeout.mjs",
+    "check:home-navigation": "node scripts/check-home-recent-navigation.mjs",
     "check:results-state": "node scripts/check-results-state.mjs",
     "typecheck": "tsc --noEmit"
   },

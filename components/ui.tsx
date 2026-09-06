@@ -19,7 +19,7 @@ export function Header({ badge = 'MeetPoint', action }: { badge?: string; action
   return (
     <View style={styles.header}>
       <View style={styles.brandRow}>
-        <View style={styles.logo}><AppIcon name="fork.knife" size={15} color="#FDBA74" /></View>
+        <View style={styles.logo}><AppIcon name="point.3.connected" size={17} color="#FFFFFF" /></View>
         <View style={styles.brandTextRow}>
           <Text style={styles.brand}>聚点聚餐</Text>
           <Text style={styles.badge}>{badge}</Text>
@@ -74,20 +74,19 @@ const styles = StyleSheet.create({
   content: { paddingHorizontal: 16, paddingTop: 8, paddingBottom: 32, gap: 14 },
   header: { minHeight: 48, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   brandRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  logo: { width: 34, height: 34, borderRadius: 12, backgroundColor: '#172033', alignItems: 'center', justifyContent: 'center' },
+  logo: { width: 34, height: 34, borderRadius: 11, backgroundColor: colors.brand, alignItems: 'center', justifyContent: 'center' },
   brandTextRow: { flexDirection: 'row', alignItems: 'center', gap: 7 },
   brand: { fontSize: 17, color: colors.text, fontWeight: '800', letterSpacing: -.3 },
-  badge: { fontSize: 10, color: '#9A421D', backgroundColor: '#FFEDD5', paddingHorizontal: 7, paddingVertical: 3, borderRadius: 5, overflow: 'hidden', fontWeight: '600' },
+  badge: { fontSize: 10, color: '#385F88', backgroundColor: colors.brandSoft, paddingHorizontal: 7, paddingVertical: 3, borderRadius: 5, overflow: 'hidden', fontWeight: '600' },
   card: { backgroundColor: colors.card, borderWidth: 1, borderColor: colors.line, borderRadius: 18, padding: 15, ...shadows.card },
   sectionTitleRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 2 },
   sectionTitle: { color: colors.text, fontSize: 17, fontWeight: '800', letterSpacing: -.25 },
   sectionSubtitle: { color: colors.muted, fontSize: 12, marginTop: 2 },
   chip: { paddingHorizontal: 12, paddingVertical: 8, borderRadius: 12, backgroundColor: colors.subtle, borderWidth: 1, borderColor: colors.subtle },
   chipText: { fontSize: 12, color: colors.muted, fontWeight: '600' },
-  primary: { minHeight: 50, borderRadius: 17, backgroundColor: colors.brand, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, shadowColor: '#6C2E16', shadowOpacity: .16, shadowRadius: 12, shadowOffset: { width: 0, height: 5 }, elevation: 3 },
+  primary: { minHeight: 50, borderRadius: 15, backgroundColor: colors.brand, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, shadowColor: '#243E59', shadowOpacity: .14, shadowRadius: 11, shadowOffset: { width: 0, height: 5 }, elevation: 3 },
   primaryText: { color: '#FFFFFF', fontSize: 15, fontWeight: '800' },
   empty: { alignItems: 'center', paddingVertical: 26 },
   emptyTitle: { color: colors.text, fontSize: 15, fontWeight: '800' },
   emptyBody: { color: colors.muted, fontSize: 12, marginTop: 5, textAlign: 'center' },
 });
-

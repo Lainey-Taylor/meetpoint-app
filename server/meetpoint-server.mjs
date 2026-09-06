@@ -1167,7 +1167,7 @@ function sendMapHtml(response, requestUrl) {
   const safeJsKey = encodeURIComponent(env.AMAP_JS_KEY);
   const body = `<!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<style>html,body,#map{width:100%;height:100%;margin:0;overflow:hidden}.pin{min-width:24px;height:24px;padding:0 7px;border-radius:13px;background:#C86D44;color:#fff;border:2px solid #fff;box-shadow:0 3px 10px #0004;display:flex;align-items:center;justify-content:center;font:700 11px -apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;white-space:nowrap}.pin.member{background:#3167C6}.error{height:100%;display:flex;align-items:center;justify-content:center;color:#697386;font:13px -apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;background:#f2f3f7}</style>
+<style>html,body,#map{width:100%;height:100%;margin:0;overflow:hidden}.pin{min-width:24px;height:24px;padding:0 7px;border-radius:13px;background:#4B79A8;color:#fff;border:2px solid #fff;box-shadow:0 3px 10px #0004;display:flex;align-items:center;justify-content:center;font:700 11px -apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;white-space:nowrap}.pin.member{background:#294B6E}.error{height:100%;display:flex;align-items:center;justify-content:center;color:#65778B;font:13px -apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;background:#edf2f7}</style>
 <script>window._AMapSecurityConfig={serviceHost:location.origin+'/api/amap-service'};window.__MAP_DATA__=${safeData};</script>
 <script src="https://webapi.amap.com/maps?v=2.0&key=${safeJsKey}"></script></head>
 <body><div id="map"></div><script>
