@@ -11,7 +11,7 @@ const tabs = [
 ] as const;
 
 export default function TabLayout() {
-  return <Tabs screenOptions={{
+  const navigator = <Tabs screenOptions={{
     headerShown: false,
     tabBarActiveTintColor: colors.brand,
     tabBarInactiveTintColor: colors.faint,
@@ -22,6 +22,8 @@ export default function TabLayout() {
   }}>
     {tabs.map(([name, title, emoji]) => <Tabs.Screen key={name} name={name} options={{ title, tabBarIcon: ({ focused }) => <EmojiTabIcon emoji={emoji} focused={focused} /> }} />)}
   </Tabs>;
+
+  return Platform.OS === 'web' ? <View style={styles.webFrame}>{navigator}</View> : navigator;
 }
 
 function EmojiTabIcon({ emoji, focused }: { emoji: string; focused: boolean }) {
@@ -29,6 +31,7 @@ function EmojiTabIcon({ emoji, focused }: { emoji: string; focused: boolean }) {
 }
 
 const styles = StyleSheet.create({
+  webFrame: { flex: 1, width: '100%', maxWidth: 540, alignSelf: 'center', backgroundColor: colors.background, overflow: 'hidden' },
   tabEmojiBox: { width: 28, height: 27, alignItems: 'center', justifyContent: 'center' },
   tabEmoji: { fontSize: 20, lineHeight: 24, textAlign: 'center' },
   tabEmojiInactive: { opacity: .56 },

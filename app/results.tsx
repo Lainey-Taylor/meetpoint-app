@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AppIcon } from '@/components/AppIcon';
@@ -23,7 +23,7 @@ export default function ResultsScreen() {
         ? (a.maxOverrunSeconds ?? 999999) - (b.maxOverrunSeconds ?? 999999)
         : worst(a) - worst(b)), [relaxed, sort, state.recommendation.results]);
 
-  return (
+  const page = (
     <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
       <View style={styles.header}><Pressable onPress={() => router.canGoBack() ? router.back() : router.replace('/choose')} style={styles.circle}><AppIcon name="chevron.left" size={17} color={colors.text} /></Pressable><View style={{ flex: 1 }}><Text style={styles.title}>{relaxed ? '最少超时方案' : '符合要求的餐厅'}</Text><Text style={styles.subtitle}>{state.city} · {state.participants.length} 人聚会 · 约定 {state.arrivalTime} 到达</Text></View><Pressable style={styles.circle}><AppIcon name="square.and.arrow.up" size={17} color={colors.text} /></Pressable><Pressable style={styles.circle}><AppIcon name="sliders" size={17} color={colors.text} /></Pressable></View>
       <ScrollView style={styles.scroll} contentContainerStyle={styles.body} showsVerticalScrollIndicator={false}>
@@ -40,6 +40,8 @@ export default function ResultsScreen() {
       </ScrollView>
     </SafeAreaView>
   );
+
+  return Platform.OS === 'web' ? <View style={styles.webFrame}>{page}</View> : page;
 }
 
 function worst(item: RestaurantResult) { return Math.max(...item.participantResults.flatMap((p) => p.routes.filter((r) => r.status === 'ok').map((r) => r.displayMinutes || 999))); }
@@ -56,6 +58,7 @@ function RestaurantCard({ item, rank, relaxed }: { item: RestaurantResult; rank:
 }
 
 const styles = StyleSheet.create({
+  webFrame: { flex: 1, width: '100%', maxWidth: 540, alignSelf: 'center', backgroundColor: colors.background, overflow: 'hidden' },
   safe: { flex: 1, backgroundColor: colors.background }, header: { minHeight: 62, paddingHorizontal: 16, flexDirection: 'row', alignItems: 'center', gap: 8 }, circle: { width: 36, height: 36, borderRadius: 18, backgroundColor: colors.subtle, alignItems: 'center', justifyContent: 'center' }, title: { color: colors.text, fontSize: 16, fontWeight: '900' }, subtitle: { color: colors.text, fontSize: 9, marginTop: 2, fontWeight: '600' },
   scroll: { flex: 1 }, body: { padding: 16, paddingBottom: 28, gap: 12 }, diagnosis: { backgroundColor: '#fff', borderRadius: 14, padding: 14, flexDirection: 'row', alignItems: 'center', gap: 11 }, diagnosisRelaxed: { backgroundColor: colors.brandSoft }, diagnosisIcon: { width: 36, height: 36, borderRadius: 18, backgroundColor: colors.brandSoft, alignItems: 'center', justifyContent: 'center' }, checkMark: { width: 24, height: 24, position: 'relative' }, checkStem: { position: 'absolute', left: 5, top: 12, width: 4, height: 10, borderRadius: 2, backgroundColor: colors.brand, transform: [{ rotate: '-45deg' }] }, checkArm: { position: 'absolute', left: 14, top: 4, width: 4, height: 19, borderRadius: 2, backgroundColor: colors.brand, transform: [{ rotate: '45deg' }] }, diagEyebrow: { color: colors.brand, fontSize: 9, fontWeight: '700' }, diagTitle: { color: colors.text, fontSize: 14, lineHeight: 20, fontWeight: '900', marginTop: 2 }, diagBody: { color: colors.muted, fontSize: 10, marginTop: 3 },
   sortRow: { flexDirection: 'row', alignItems: 'center', gap: 6 }, sortLabel: { color: colors.muted, fontSize: 10 },
