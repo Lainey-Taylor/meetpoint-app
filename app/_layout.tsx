@@ -14,6 +14,7 @@ export default function RootLayout() {
       <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.background } }}>
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="results" options={{ presentation: 'card' }} />
+        <Stack.Screen name="event-detail" options={{ presentation: 'card' }} />
       </Stack>
     </MeetPointProvider>
   );

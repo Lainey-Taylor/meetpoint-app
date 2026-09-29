@@ -16,13 +16,9 @@ const areas = [
 
 export default function HomeScreen() {
   const [activeSchedule, setActiveSchedule] = useState('全部');
-  function continueRecentDinner() {
-    router.push('/results');
-  }
-
   const events = [
-    { image: require('../../assets/images/stitch-event-upcoming.jpg'), date: '本周六 · 18:30', title: '第 3 次出行（三里屯太古里）', meta: '★ 评分 4.9  ·  人均 ¥158  ·  4人已确认', status: '待出行', onPress: continueRecentDinner },
-    { image: require('../../assets/images/stitch-event-past.jpg'), date: '上周五 · 已圆满聚餐', title: '第 2 次出行（望京万科时代）', meta: '★ 评分 4.8  ·  人均 ¥125  ·  6人已确认', status: '已结束', onPress: continueRecentDinner },
+    { image: require('../../assets/images/stitch-event-upcoming.jpg'), date: '本周六 · 18:30', title: '三里屯太古里', meta: '★ 评分 4.9  ·  人均 ¥158  ·  4人已确认', status: '待出行', onPress: () => router.push({ pathname: '/event-detail', params: { id: 'sanlitun' } }) },
+    { image: require('../../assets/images/stitch-event-past.jpg'), date: '上周五 · 已圆满聚餐', title: '望京万科时代', meta: '★ 评分 4.8  ·  人均 ¥125  ·  6人已确认', status: '已结束', onPress: () => router.push({ pathname: '/event-detail', params: { id: 'wangjing' } }) },
   ];
   const visibleEvents = activeSchedule === '全部' ? events : events.filter((event) => event.status === activeSchedule);
 
