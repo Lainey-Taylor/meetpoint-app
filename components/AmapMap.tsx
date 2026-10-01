@@ -4,8 +4,8 @@ import { WebView } from 'react-native-webview';
 import { buildAmapUrl, type MapPoint } from '@/components/amap-map-url';
 import { colors } from '@/constants/theme';
 
-export function AmapMap({ members, restaurants, allowEmpty = false, style }: { members: MapPoint[]; restaurants: MapPoint[]; allowEmpty?: boolean; style?: StyleProp<ViewStyle> }) {
-  const uri = buildAmapUrl(members, restaurants, allowEmpty);
+export function AmapMap({ members, restaurants, allowEmpty = false, emojiMarkers = false, style }: { members: MapPoint[]; restaurants: MapPoint[]; allowEmpty?: boolean; emojiMarkers?: boolean; style?: StyleProp<ViewStyle> }) {
+  const uri = buildAmapUrl(members, restaurants, allowEmpty, emojiMarkers);
   if (!uri) return <MapUnavailable />;
   return <View style={[styles.mapFrame, style]}><WebView source={{ uri }} style={styles.webView} javaScriptEnabled domStorageEnabled scrollEnabled={false} bounces={false} /></View>;
 }

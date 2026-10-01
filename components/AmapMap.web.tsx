@@ -4,8 +4,8 @@ import { StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-na
 import { buildAmapUrl, type MapPoint } from '@/components/amap-map-url';
 import { colors } from '@/constants/theme';
 
-export function AmapMap({ members, restaurants, allowEmpty = false, style }: { members: MapPoint[]; restaurants: MapPoint[]; allowEmpty?: boolean; style?: StyleProp<ViewStyle> }) {
-  const uri = buildAmapUrl(members, restaurants, allowEmpty);
+export function AmapMap({ members, restaurants, allowEmpty = false, emojiMarkers = false, style }: { members: MapPoint[]; restaurants: MapPoint[]; allowEmpty?: boolean; emojiMarkers?: boolean; style?: StyleProp<ViewStyle> }) {
+  const uri = buildAmapUrl(members, restaurants, allowEmpty, emojiMarkers);
   if (!uri) return <View style={[styles.map, styles.empty]}><Text style={styles.emptyTitle}>高德地图等待实时结果</Text><Text style={styles.emptyBody}>完成一次真实通勤计算后，这里会显示成员和餐厅位置。</Text></View>;
   return <View style={[styles.map, style]}>{createElement('iframe', { src: uri, title: '高德地图', style: { width: '100%', height: '100%', border: 0 } })}</View>;
 }

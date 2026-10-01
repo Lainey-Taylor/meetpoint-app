@@ -25,7 +25,7 @@ export default function ResultsScreen() {
 
   const page = (
     <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
-      <View style={styles.header}><Pressable onPress={() => router.canGoBack() ? router.back() : router.replace('/choose')} style={styles.circle}><AppIcon name="chevron.left" size={17} color={colors.text} /></Pressable><View style={{ flex: 1 }}><Text style={styles.title}>{relaxed ? '最少超时方案' : '符合要求的餐厅'}</Text><Text style={styles.subtitle}>{state.city} · {state.participants.length} 人聚会 · 约定 {state.arrivalTime} 到达</Text></View><Pressable style={styles.circle}><AppIcon name="square.and.arrow.up" size={17} color={colors.text} /></Pressable><Pressable style={styles.circle}><AppIcon name="sliders" size={17} color={colors.text} /></Pressable></View>
+      <View style={styles.header}><Pressable onPress={() => router.canGoBack() ? router.back() : router.replace('/choose')} style={styles.circle}><AppIcon name="chevron.left" size={17} color={colors.text} /></Pressable><View style={{ flex: 1 }}><Text style={styles.title}>{relaxed ? '最少超时方案' : '符合要求的餐厅'}</Text><Text style={styles.subtitle}>{state.city} · {state.participants.length} 人聚会 · 约定 {state.arrivalTime} 到达</Text></View></View>
       <ScrollView style={styles.scroll} contentContainerStyle={styles.body} showsVerticalScrollIndicator={false}>
         <View style={[styles.diagnosis, relaxed && styles.diagnosisRelaxed]}>
           <View style={styles.diagnosisIcon}>{relaxed ? <AppIcon name="exclamationmark.triangle.fill" size={20} color={colors.brand} /> : <SuccessMark />}</View>
@@ -33,6 +33,7 @@ export default function ResultsScreen() {
         </View>
         <View style={styles.sortRow}><Text style={styles.sortLabel}>排序</Text>{relaxed ? <Chip label="超时最少" active={sort === 'time'} onPress={() => setSort('time')} /> : <><Chip label="评分优先" active={sort === 'rating'} onPress={() => setSort('rating')} /><Chip label="耗时最短" active={sort === 'time'} onPress={() => setSort('time')} /></>}<Chip label="人均低到高" active={sort === 'price'} onPress={() => setSort('price')} /></View>
         <AmapMap
+          emojiMarkers
           members={(state.recommendation.participants || []).map((person) => ({ label: person.name, location: person.location }))}
           restaurants={results.map((restaurant) => ({ label: restaurant.name, location: restaurant.location }))}
         />
