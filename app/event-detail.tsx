@@ -1,9 +1,12 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import { ImageBackground, Linking, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
+import { useState } from 'react';
+import { Image, ImageBackground, Linking, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AmapMap } from '@/components/AmapMap';
 import { AppIcon } from '@/components/AppIcon';
+import { BackChevron } from '@/components/BackChevron';
 import { PixelAvatar } from '@/components/PixelAvatar';
 import { colors, shadows } from '@/constants/theme';
 
@@ -33,12 +36,17 @@ const events = {
 export default function EventDetailScreen() {
   const { id } = useLocalSearchParams<{ id?: string }>();
   const event = id === 'wangjing' ? events.wangjing : events.sanlitun;
+  const [photoUri, setPhotoUri] = useState<string | null>(null);
 
   const openMap = () => Linking.openURL(`https://uri.amap.com/search?keyword=${encodeURIComponent(event.place)}`);
+  const pickPhoto = async () => {
+    const selection = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ['images'], quality: .8 });
+    if (!selection.canceled && selection.assets[0]?.uri) setPhotoUri(selection.assets[0].uri);
+  };
 
   return <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
     <View style={styles.header}>
-      <Pressable onPress={() => router.back()} accessibilityRole="button" accessibilityLabel="返回首页" style={styles.back}><AppIcon name="chevron.left" size={27} color={colors.text} /></Pressable>
+      <Pressable onPress={() => router.back()} accessibilityRole="button" accessibilityLabel="返回首页" style={styles.back}><BackChevron /></Pressable>
       <Text style={styles.headerTitle}>日程详情</Text>
       <View style={styles.headerSpacer} />
     </View>
@@ -64,18 +72,18 @@ export default function EventDetailScreen() {
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>集合地点指引</Text>
-        <View style={styles.mapWrap}><AmapMap allowEmpty members={[]} restaurants={[{ label: event.title, location: event.location }]} style={styles.map} /></View>
+        <View style={styles.mapWrap}><AmapMap allowEmpty roundMarkers members={[]} restaurants={[{ label: event.title, location: event.location }]} style={styles.map} /></View>
         <View style={styles.locationCard}><Text style={styles.locationName}>{event.title}</Text><Text style={styles.locationSub}>{event.place} · 地图标记为商圈参考位置</Text></View>
         <Pressable onPress={openMap} style={styles.mapAction} accessibilityRole="button"><Text style={styles.mapActionText}>在高德地图中查看</Text><AppIcon name="arrow.turn.up.right" size={16} color={colors.brand} /></Pressable>
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>聚会掠影</Text>
-        <View style={styles.photoEmpty}><Text style={styles.photoIcon}>▧</Text><Text style={styles.photoTitle}>暂无聚会照片</Text><Text style={styles.photoHint}>美好瞬间，留待下次记录</Text></View>
+        <View style={styles.photoHeader}><Text style={[styles.sectionTitle, styles.photoSectionTitle]}>聚会掠影</Text><Pressable onPress={pickPhoto} accessibilityRole="button" accessibilityLabel="选择聚会照片"><Text style={styles.uploadText}>＋ 上传照片</Text></Pressable></View>
+        {photoUri ? <View><Image source={{ uri: photoUri }} style={styles.photoPreview} resizeMode="cover" /><Text style={styles.photoHint}>照片仅在当前页面预览，刷新后不会保存</Text></View> : <View style={styles.photoEmpty}><View style={styles.cameraBadge}><View style={styles.cameraBody}><View style={styles.cameraLens} /></View></View><Text style={styles.photoTitle}>留下美好瞬间</Text><Text style={styles.photoHint}>成为第一个分享本次聚会美貌合影的朋友吧！</Text></View>}
       </View>
     </ScrollView>
 
-    <View style={styles.footer}><View><Text style={styles.footerLabel}>聚会状态</Text><Text style={styles.footerStatus}>{event.status}</Text></View><Pressable style={styles.footerButton} onPress={() => router.push('/choose')}><Text style={styles.footerButtonText}>{event.status === '已结束' ? '再次聚餐选址' : '继续选择餐厅'}</Text></Pressable></View>
+    <View style={styles.footer}><View style={styles.footerInner}><View><Text style={styles.footerLabel}>聚会状态</Text><Text style={styles.footerStatus}>{event.status}</Text></View><Pressable style={styles.footerButton} onPress={() => router.push('/choose')}><Text style={styles.footerButtonText}>{event.status === '已结束' ? '再次聚餐选址' : '继续选择餐厅'}</Text></Pressable></View></View>
   </SafeAreaView>;
 }
 
@@ -89,7 +97,7 @@ const styles = StyleSheet.create({
   heroImage: { borderRadius: 26 }, heroShade: { position: 'absolute', inset: 0, backgroundColor: 'rgba(12,23,39,.22)' },
   statusPill: { alignSelf: 'flex-start', flexDirection: 'row', alignItems: 'center', gap: 7, backgroundColor: colors.brand, borderRadius: 17, paddingHorizontal: 12, paddingVertical: 8, margin: 15 },
   statusDot: { width: 7, height: 7, borderRadius: 4, backgroundColor: '#fff' }, statusText: { color: '#fff', fontSize: 12, fontWeight: '800' },
-  title: { color: colors.text, fontSize: 25, lineHeight: 33, fontWeight: '900', marginTop: 23, marginBottom: 18 },
+  title: { color: colors.text, fontSize: 17, lineHeight: 23, fontWeight: '800', marginTop: 23, marginBottom: 18 },
   infoCard: { backgroundColor: '#F8FAFC', borderRadius: 20, padding: 17, borderWidth: 1, borderColor: '#EEF1F5' },
   infoRow: { flexDirection: 'row', alignItems: 'center', gap: 15 }, infoIcon: { width: 45, height: 45, borderRadius: 13, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.brandSoft },
   infoCopy: { flex: 1 }, infoMain: { color: colors.text, fontSize: 15, fontWeight: '800' }, infoSub: { color: colors.muted, fontSize: 12, marginTop: 5 },
@@ -100,9 +108,10 @@ const styles = StyleSheet.create({
   mapWrap: { height: 190, borderRadius: 18, overflow: 'hidden', borderWidth: 1, borderColor: colors.line }, map: { height: 190, width: '100%', borderRadius: 0 },
   locationCard: { marginTop: 13, padding: 14, borderRadius: 16, backgroundColor: '#F8FAFC' }, locationName: { color: colors.text, fontSize: 13, fontWeight: '800' }, locationSub: { color: colors.muted, fontSize: 12, lineHeight: 18, marginTop: 5 },
   mapAction: { marginTop: 13, alignSelf: 'flex-start', flexDirection: 'row', alignItems: 'center', gap: 5 }, mapActionText: { color: colors.brand, fontSize: 13, fontWeight: '800' },
-  photoEmpty: { height: 160, borderRadius: 20, borderWidth: 2, borderStyle: 'dashed', borderColor: '#DEE5ED', backgroundColor: '#FAFBFD', alignItems: 'center', justifyContent: 'center' },
-  photoIcon: { color: '#9FAEC1', fontSize: 28 }, photoTitle: { color: colors.text, fontSize: 13, fontWeight: '800', marginTop: 7 }, photoHint: { color: colors.faint, fontSize: 11, marginTop: 4 },
-  footer: { minHeight: 72, paddingHorizontal: 20, paddingVertical: 11, borderTopWidth: 1, borderTopColor: colors.line, backgroundColor: '#fff', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  photoHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }, photoSectionTitle: { marginBottom: 0 }, uploadText: { color: colors.brand, fontSize: 13, fontWeight: '800' },
+  photoEmpty: { minHeight: 160, borderRadius: 20, borderWidth: 2, borderStyle: 'dashed', borderColor: '#DEE5ED', backgroundColor: '#FAFBFD', alignItems: 'center', justifyContent: 'center', paddingHorizontal: 12 },
+  cameraBadge: { width: 48, height: 48, borderRadius: 24, backgroundColor: '#fff', alignItems: 'center', justifyContent: 'center' }, cameraBody: { width: 24, height: 18, borderRadius: 4, borderWidth: 2, borderColor: '#91A3BC', alignItems: 'center', justifyContent: 'center' }, cameraLens: { width: 9, height: 9, borderRadius: 5, borderWidth: 2, borderColor: '#91A3BC' }, photoTitle: { color: colors.text, fontSize: 13, fontWeight: '800', marginTop: 9 }, photoHint: { color: colors.faint, fontSize: 11, marginTop: 5, textAlign: 'center' }, photoPreview: { width: '100%', height: 180, borderRadius: 18 },
+  footer: { minHeight: 72, paddingVertical: 11, borderTopWidth: 1, borderTopColor: colors.line, backgroundColor: '#fff' }, footerInner: { width: '100%', maxWidth: 540, alignSelf: 'center', paddingHorizontal: 18, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   footerLabel: { color: colors.faint, fontSize: 11 }, footerStatus: { color: colors.text, fontSize: 14, fontWeight: '900', marginTop: 3 },
   footerButton: { backgroundColor: colors.brand, borderRadius: 22, paddingHorizontal: 19, paddingVertical: 12 }, footerButtonText: { color: '#fff', fontSize: 13, fontWeight: '900' },
 });
